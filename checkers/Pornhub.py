@@ -1,19 +1,22 @@
 
 import requests, random, colorama, time
 
-endpoint = "https://chess.com/member/"
+endpoint = "https://www.pornhub.com/users/"
 
-def check(username:str, proxy:str=""):
+def check(username:str, proxy:str="", chances:int=0):
     if proxy != "":
-        r = requests.head(endpoint+username.lower(), proxies={proxy.split('|')[0]:proxy.split('|')[1].strip('\n')})
+        r = requests.get(endpoint+username, proxies={proxy.split('|')[0]:proxy.split('|')[1].strip('\n')})
     else:
-        r = requests.head(endpoint+username.lower())
-    if r.status_code == 429:
-        time.sleep(5)
-        return check(username=username, proxy=proxy)
-    if r.status_code == 404:
+        r = requests.get(endpoint+username)
+    if 'Error Page Not Found' in r.text:
         return username
-    return None
+    elif 'Last Login' in r.text:
+        return None
+    elif chances <= 7:
+        time.sleep(1)
+        return check(username=username, proxy=proxy, chances=chances+1)
+    else:
+        return None
 
 def run(usernames_path:str="", proxies_path:str="", usernames:str=""):
     valid = []

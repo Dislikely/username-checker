@@ -1,7 +1,7 @@
 
 import requests, random, colorama, time
 
-endpoint = "https://chess.com/member/"
+endpoint = "https://www.speedrun.com/user/"
 
 def check(username:str, proxy:str=""):
     if proxy != "":

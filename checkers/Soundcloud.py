@@ -1,17 +1,17 @@
 
 import requests, random, colorama, time
 
-endpoint = "https://chess.com/member/"
+endpoint, params = "https://api-v2.soundcloud.com/resolve?url=https://soundcloud.com/", "&client_id=Ytvrdcz3HfKzg9kkrtf3542ux1xS2urR&app_version=6969696969&app_locale=en"
 
 def check(username:str, proxy:str=""):
     if proxy != "":
-        r = requests.head(endpoint+username.lower(), proxies={proxy.split('|')[0]:proxy.split('|')[1].strip('\n')})
+        r = requests.get(endpoint+username+params, proxies={proxy.split('|')[0]:proxy.split('|')[1].strip('\n')})
     else:
-        r = requests.head(endpoint+username.lower())
+        r = requests.get(endpoint+username+params)
     if r.status_code == 429:
         time.sleep(5)
         return check(username=username, proxy=proxy)
-    if r.status_code == 404:
+    if r.status_code == 404 and len(username) >= 3 and len(username) <= 25:
         return username
     return None
 

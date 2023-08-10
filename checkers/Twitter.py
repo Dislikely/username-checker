@@ -1,17 +1,17 @@
 
 import requests, random, colorama, time
 
-endpoint = "https://chess.com/member/"
+endpoint = "https://api.twitter.com/i/users/username_available.json?username="
 
 def check(username:str, proxy:str=""):
     if proxy != "":
-        r = requests.head(endpoint+username.lower(), proxies={proxy.split('|')[0]:proxy.split('|')[1].strip('\n')})
+        r = requests.get(endpoint+username, proxies={proxy.split('|')[0]:proxy.split('|')[1].strip('\n')})
     else:
-        r = requests.head(endpoint+username.lower())
+        r = requests.get(endpoint+username)
     if r.status_code == 429:
         time.sleep(5)
         return check(username=username, proxy=proxy)
-    if r.status_code == 404:
+    if r.json()['valid']:
         return username
     return None
 

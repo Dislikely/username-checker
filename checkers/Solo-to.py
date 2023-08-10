@@ -1,17 +1,17 @@
 
 import requests, random, colorama, time
 
-endpoint = "https://chess.com/member/"
+endpoint = "https://api.solo.to/"
 
 def check(username:str, proxy:str=""):
     if proxy != "":
-        r = requests.head(endpoint+username.lower(), proxies={proxy.split('|')[0]:proxy.split('|')[1].strip('\n')})
+        r = requests.get(endpoint+username, proxies={proxy.split('|')[0]:proxy.split('|')[1].strip('\n')})
     else:
-        r = requests.head(endpoint+username.lower())
+        r = requests.get(endpoint+username, headers={'user-agent':'Mozilla/5.0 (Kanye) West/5.765 Ye/42.1 (mov-ebx/username-checker on git hub)'})
     if r.status_code == 429:
         time.sleep(5)
         return check(username=username, proxy=proxy)
-    if r.status_code == 404:
+    if "page not found" in r.text:
         return username
     return None
 
